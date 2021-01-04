@@ -18,12 +18,12 @@
                         <div class="row register-form">
                             <div class="col-md-12 center-block">
                                 <div class="form-group d-flex justify-content-center">
-                                    <input type="email" class="form-control" placeholder="Your Email *" value="" />
+                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value=""  ID="TBLoginEmail" runat="server"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group d-flex justify-content-center">
-                                    <input type="password" class="form-control" placeholder="Password *" value="" />
-                                </div>
+                                    <asp:TextBox type="password" class="form-control" placeholder="Password *" value="" runat="server" ID="TBLoginPassword"></asp:TextBox>
+                                    <asp:Label ID="lblLoginPasswordAlerts" runat="server"></asp:Label></div>
                             </div>
                             <input type="submit" class="btnRegister" value="Register" />
                         </div>
@@ -31,4 +31,5 @@
                 </div>
             </div>
         </div>
+    </div>
 </asp:Content>

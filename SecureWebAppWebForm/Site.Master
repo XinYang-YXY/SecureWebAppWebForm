@@ -60,14 +60,15 @@
             </Scripts>
         </asp:ScriptManager>
 
+        <div>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
 
+        </div>
 
     </form>
-    <div>
-        <asp:ContentPlaceHolder ID="MainContent" runat="server">
-        </asp:ContentPlaceHolder>
 
-    </div>
+
 
 
     <div class="bg-darkBlue text-white py-4 footerSpaceAbove">
