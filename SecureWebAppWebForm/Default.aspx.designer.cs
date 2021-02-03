@@ -96,13 +96,13 @@ namespace SecureWebAppWebForm
         protected global::System.Web.UI.WebControls.TextBox TBRegisterConfirmPassword;
 
         /// <summary>
-        /// TBRegisterDate control.
+        /// TBRegisterDOB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TBRegisterDate;
+        protected global::System.Web.UI.WebControls.TextBox TBRegisterDOB;
 
         /// <summary>
         /// BTNRegisterSubmit control.

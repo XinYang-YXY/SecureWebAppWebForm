@@ -15,6 +15,33 @@ namespace SecureWebAppWebForm
     {
 
         /// <summary>
+        /// registerMenuBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor registerMenuBtn;
+
+        /// <summary>
+        /// loginMenuBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor loginMenuBtn;
+
+        /// <summary>
+        /// logoutMenuBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button logoutMenuBtn;
+
+        /// <summary>
         /// MainContent control.
         /// </summary>
         /// <remarks>

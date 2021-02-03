@@ -48,7 +48,7 @@
 
                             </div>
                             <div class="form-group col-md-12">
-                                <asp:TextBox type="date" class="form-control col-md-12" value="" ID="TBRegisterDate" runat="server"></asp:TextBox>
+                                <asp:TextBox type="date" class="form-control col-md-12" value="" ID="TBRegisterDOB" runat="server"></asp:TextBox>
                             </div>
                             <asp:Button type="submit" class="btnRegister" ID="BTNRegisterSubmit" runat="server" Text="Register" OnClick="RegisterSubmitBtn_Click" />
                         </div>

@@ -16,30 +16,37 @@
     <webopt:BundleReference runat="server" Path="~/Content/MyCSS/Registration.css" />
     <webopt:BundleReference runat="server" Path="~/Content/MyCSS/shared.css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <script src="https://www.google.com/recaptcha/api.js?render=6Le3TkgaAAAAAOH6LIQ8sRzASt4PNG8b8MIDI0m6"></script>
+<%--    <script src="https://www.google.com/recaptcha/api.js"></script>--%>
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" runat="server" href="~/">SecureWebAppWebForm</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" runat="server" href="~/">Register</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" runat="server" href="~/Login">Login</a>
-                </li>
-
-
-            </ul>
-        </div>
-    </nav>
 
     <form runat="server">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" runat="server" href="~/">SecureWebAppWebForm</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" runat="server" href="~/" id="registerMenuBtn">Register</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" runat="server" href="~/Login" id="loginMenuBtn">Login</a>
+                    </li>
+                    <li class="nav-item active">
+                        <asp:Button ID="logoutMenuBtn" runat="server" Text="Logout" CssClass="nav-link" OnClick="logoutMenuBtn_Click" Visible="False" />
+                        <%--                    <a class="nav-link" runat="server" href="~/Login" id="logoutMenuBtn" visible="False">Logout</a>--%>
+                    </li>
+
+
+                </ul>
+            </div>
+        </nav>
+
         <asp:ScriptManager runat="server">
             <Scripts>
                 <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
@@ -67,6 +74,9 @@
         </div>
 
     </form>
+
+                           <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+    <script>grecaptcha.ready(function () { grecaptcha.execute('6Le3TkgaAAAAAOH6LIQ8sRzASt4PNG8b8MIDI0m6', { action: 'Login' }).then(function (token) { document.getElementById("g-recaptcha-response").value = token; }); });       </script>
 
 
 

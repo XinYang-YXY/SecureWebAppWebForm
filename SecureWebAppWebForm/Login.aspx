@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Login Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="SecureWebAppWebForm._Default" %>
+﻿<%@ Page Title="Login Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="SecureWebAppWebForm.Login" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -25,7 +25,10 @@
                                     <asp:TextBox type="password" class="form-control" placeholder="Password *" value="" runat="server" ID="TBLoginPassword"></asp:TextBox>
                                     <asp:Label ID="lblLoginPasswordAlerts" runat="server"></asp:Label></div>
                             </div>
-                            <input type="submit" class="btnRegister" value="Register" />
+                            <asp:Label ID="loginCaptcha" runat="server" Text=""></asp:Label>
+                            <%--<div class="g-recaptcha" data-sitekey="6LfjzOQZAAAAAIb1M_33LPzD8asmsl3xL801Fy57"></div>--%>
+                           <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+                            <asp:Button runat="server"  class="btnRegister" ID="BTNLoginSubmit" Text="Login" OnClick="LoginSubmitBtn_Click"/>
                         </div>
                     </div>
                 </div>
