@@ -29,6 +29,7 @@
                             <%--<div class="g-recaptcha" data-sitekey="6LfjzOQZAAAAAIb1M_33LPzD8asmsl3xL801Fy57"></div>--%>
                            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
                             <asp:Label ID="loginErrorMsg" runat="server" Text="" Visible="False"></asp:Label>
+                            <asp:Button ID="GoToResetPasswordBtn" runat="server" Text="Reset Password" Visible="False" OnClick="GoToResetPasswordBtn_Click" />
                             <asp:Button runat="server"  class="btnRegister" ID="BTNLoginSubmit" Text="Login" OnClick="LoginSubmitBtn_Click"/>
                         </div>
                     </div>

@@ -147,7 +147,7 @@ namespace SecureWebAppWebForm
 
 
                 string sqlStmt = "INSERT INTO Account VALUES(@firstName, @lastName, @creditCardNum," +
-                    " @email, @passwordHash, @passwordSalt, @dob, @creditCardPin, @creditCardExpireDate, @IV, @Key, @failedLoginAttempt)";
+                    " @email, @passwordHash, @passwordSalt, @dob, @creditCardPin, @creditCardExpireDate, @IV, @Key, @failedLoginAttempt, @passwordHistory1, @passwordHistory1Salt, @passwordHistory2, @passwordHistory2Salt, @passwordLastModified, @recoveryGUID)";
                 SqlCommand cmd = new SqlCommand(sqlStmt, con);
 
                 cmd.CommandType = CommandType.Text;
@@ -163,6 +163,12 @@ namespace SecureWebAppWebForm
                 cmd.Parameters.AddWithValue("@IV", Convert.ToBase64String(IV));
                 cmd.Parameters.AddWithValue("@Key", Convert.ToBase64String(Key));
                 cmd.Parameters.AddWithValue("@failedLoginAttempt", 0);
+                cmd.Parameters.AddWithValue("@passwordHistory1", finalHash);
+                cmd.Parameters.AddWithValue("@passwordHistory1Salt", salt);
+                cmd.Parameters.AddWithValue("@passwordHistory2", finalHash);
+                cmd.Parameters.AddWithValue("@passwordHistory2Salt", salt);
+                cmd.Parameters.AddWithValue("@passwordLastModified", DateTimeOffset.Now.ToUnixTimeSeconds());
+                cmd.Parameters.AddWithValue("@recoveryGUID", "");
 
                 con.Open();
                 cmd.ExecuteNonQuery();

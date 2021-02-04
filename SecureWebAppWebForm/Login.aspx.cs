@@ -7,8 +7,8 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Net; 
-using System.IO; 
+using System.Net;
+using System.IO;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 
@@ -20,7 +20,7 @@ namespace SecureWebAppWebForm
         public string success { get; set; }
         public List<string> ErrorMessage { get; set; }
 
-       
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -39,6 +39,7 @@ namespace SecureWebAppWebForm
                 string dhHash = getDBHash(userid);
                 string dbSalt = getDBSalt(userid);
                 int failedAttempts = getFailedAttempts(userid);
+                int passwordExpiredTime = getPasswordLastModified(userid) + 900;
 
                 string errorMsg = "";
 
@@ -56,23 +57,35 @@ namespace SecureWebAppWebForm
 
                             if (userHash.Equals(dhHash))
                             {
-                                // Session Fixation
-                                Session["LoggedIn"] = userid;
-                                string guid = Guid.NewGuid().ToString();
-                                Session["AuthToken"] = guid;
-                                Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                if (DateTimeOffset.Now.ToUnixTimeSeconds() > passwordExpiredTime)
+                                {
+                                    errorMsg = "Password has expired, please change";
+                                    loginErrorMsg.Text = errorMsg;
+                                    loginErrorMsg.Visible = true;
+                                    GoToResetPasswordBtn.Visible = true;
+                                }
+                                else
+                                {
+
+                                    // Session Fixation
+                                    Session["LoggedIn"] = userid;
+                                    string guid = Guid.NewGuid().ToString();
+                                    Session["AuthToken"] = guid;
+                                    Response.Cookies.Add(new HttpCookie("AuthToken", guid));
 
 
-                                Response.Redirect("~/Success.aspx");
+                                    Response.Redirect("~/Success.aspx");
+                                }
                             }
                             else
                             {
-                                if(failedAttempts == 2)
+                                if (failedAttempts == 2)
                                 {
-                                errorMsg = "Userid or password is not valid. Please try again. " + "Last try before account lockout";
-                                } else
+                                    errorMsg = "Userid or password is not valid. Please try again. " + "Last try before account lockout";
+                                }
+                                else
                                 {
-                                errorMsg = "Userid or password is not valid. Please try again. " + (2-failedAttempts).ToString() + " tries left";
+                                    errorMsg = "Userid or password is not valid. Please try again. " + (2 - failedAttempts).ToString() + " tries left";
                                 }
                                 loginErrorMsg.Text = errorMsg;
                                 loginErrorMsg.Visible = true;
@@ -96,7 +109,8 @@ namespace SecureWebAppWebForm
                         throw new Exception(ex.ToString());
                     }
                     finally { }
-                } else
+                }
+                else
                 {
                     loginErrorMsg.Text = "Your account has been lock out!";
                     loginErrorMsg.Visible = true;
@@ -207,6 +221,40 @@ namespace SecureWebAppWebForm
             return failedAttempts;
         }
 
+        protected int getPasswordLastModified(string userid)
+        {
+            int lastModified = 0;
+            string MYDBConnectionString =
+        System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+            SqlConnection connection = new SqlConnection(MYDBConnectionString);
+            string sql = "select passwordLastModified  FROM ACCOUNT WHERE Email=@USERID";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@USERID", userid);
+            try
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["passwordLastModified"] != null)
+                        {
+                            if (reader["passwordLastModified"] != DBNull.Value)
+                            {
+                                lastModified = Convert.ToInt32(reader["passwordLastModified"].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally { connection.Close(); }
+            return lastModified;
+        }
+
         public bool ValidateCaptcha()
         {
             bool result = true;
@@ -215,12 +263,12 @@ namespace SecureWebAppWebForm
 
 
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6Le3TkgaAAAAANFBp8eqzBnCc3EWc5k5TXAshYCJ &response=" + captchaResponse);
-           // HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6LfjzOQZAAAAANyilUp0Bi6fDVGRevu1q6ERjOHu &response=" + captchaResponse);
+            // HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6LfjzOQZAAAAANyilUp0Bi6fDVGRevu1q6ERjOHu &response=" + captchaResponse);
             try
             {
-                using(WebResponse wResponse = req.GetResponse())
+                using (WebResponse wResponse = req.GetResponse())
                 {
-                    using(StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                    using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
                     {
                         string jsonResponse = readStream.ReadToEnd();
 
@@ -235,12 +283,18 @@ namespace SecureWebAppWebForm
 
                 }
                 return result;
-            } catch(WebException ex)
+            }
+            catch (WebException ex)
             {
                 throw ex;
             }
 
             return result;
+        }
+
+        protected void GoToResetPasswordBtn_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/PasswordReset.aspx");
         }
     }
 }
