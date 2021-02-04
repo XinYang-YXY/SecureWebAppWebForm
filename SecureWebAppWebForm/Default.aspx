@@ -50,6 +50,8 @@
                             <div class="form-group col-md-12">
                                 <asp:TextBox type="date" class="form-control col-md-12" value="" ID="TBRegisterDOB" runat="server"></asp:TextBox>
                             </div>
+                            <input type="hidden" id="g-recaptcha-response-register" name="g-recaptcha-response-register"/>
+                            <asp:Label ID="registerCaptcha" runat="server" Text=""></asp:Label>
                             <asp:Button type="submit" class="btnRegister" ID="BTNRegisterSubmit" runat="server" Text="Register" OnClick="RegisterSubmitBtn_Click" />
                         </div>
                     </div>
@@ -88,5 +90,6 @@
 
             }
         </script>
+         <script>grecaptcha.ready(function () { grecaptcha.execute('6Le3TkgaAAAAAOH6LIQ8sRzASt4PNG8b8MIDI0m6', { action: 'Register' }).then(function (token) { document.getElementById("g-recaptcha-response-register").value = token; }); });       </script>
 </asp:Content>
 

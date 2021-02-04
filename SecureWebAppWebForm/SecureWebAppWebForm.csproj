@@ -120,6 +120,9 @@
     <Content Include="Content\MyCSS\Registration.css" />
     <Content Include="Content\MyCSS\shared.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="CustomError\GenericError.html" />
+    <Content Include="CustomError\HTTP404.html" />
+    <Content Include="CustomError\HTTP403.html" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />

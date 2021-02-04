@@ -51,6 +51,15 @@ namespace SecureWebAppWebForm
         protected global::System.Web.UI.WebControls.Label loginCaptcha;
 
         /// <summary>
+        /// loginErrorMsg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label loginErrorMsg;
+
+        /// <summary>
         /// BTNLoginSubmit control.
         /// </summary>
         /// <remarks>

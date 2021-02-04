@@ -20,6 +20,7 @@ namespace SecureWebAppWebForm
         public string success { get; set; }
         public List<string> ErrorMessage { get; set; }
 
+       
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -31,41 +32,75 @@ namespace SecureWebAppWebForm
             {
 
 
-                string pwd = TBLoginPassword.Text.ToString().Trim();
-                string userid = TBLoginEmail.Text.ToString().Trim();
+                string pwd = HttpUtility.HtmlEncode(TBLoginPassword.Text).ToString().Trim();
+                string userid = HttpUtility.HtmlEncode(TBLoginEmail.Text).ToString().Trim();
 
                 SHA512Managed hashing = new SHA512Managed();
                 string dhHash = getDBHash(userid);
                 string dbSalt = getDBSalt(userid);
+                int failedAttempts = getFailedAttempts(userid);
+
                 string errorMsg = "";
 
-                try
+                if (failedAttempts < 3)
                 {
-                    if (dbSalt != null && dbSalt.Length > 0 && dhHash != null & dhHash.Length > 0)
+
+
+                    try
                     {
-                        string pwdWithSalt = pwd + dbSalt;
-                        byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-                        string userHash = Convert.ToBase64String(hashWithSalt);
-
-                        if (userHash.Equals(dhHash))
+                        if (dbSalt != null && dbSalt.Length > 0 && dhHash != null & dhHash.Length > 0)
                         {
-                            // Session Fixation
-                            Session["LoggedIn"] = userid;
-                            string guid = Guid.NewGuid().ToString();
-                            Session["AuthToken"] = guid;
-                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                            string pwdWithSalt = pwd + dbSalt;
+                            byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                            string userHash = Convert.ToBase64String(hashWithSalt);
+
+                            if (userHash.Equals(dhHash))
+                            {
+                                // Session Fixation
+                                Session["LoggedIn"] = userid;
+                                string guid = Guid.NewGuid().ToString();
+                                Session["AuthToken"] = guid;
+                                Response.Cookies.Add(new HttpCookie("AuthToken", guid));
 
 
-                            Response.Redirect("~/Success.aspx");
+                                Response.Redirect("~/Success.aspx");
+                            }
+                            else
+                            {
+                                if(failedAttempts == 2)
+                                {
+                                errorMsg = "Userid or password is not valid. Please try again. " + "Last try before account lockout";
+                                } else
+                                {
+                                errorMsg = "Userid or password is not valid. Please try again. " + (2-failedAttempts).ToString() + " tries left";
+                                }
+                                loginErrorMsg.Text = errorMsg;
+                                loginErrorMsg.Visible = true;
+                                string MYDBConnectionString =
+            System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+                                SqlConnection connection = new SqlConnection(MYDBConnectionString);
+                                string sqlstmt = "Update Account Set failedLoginAttempt= @failedAttempts Where email = @email";
+                                SqlCommand sqlCmd = new SqlCommand(sqlstmt, connection);
+                                sqlCmd.Parameters.AddWithValue("@failedAttempts", failedAttempts + 1);
+                                sqlCmd.Parameters.AddWithValue("@email", userid);
+                                connection.Open();
+                                sqlCmd.ExecuteNonQuery();
+                                connection.Close();
+
+                                // Response.Redirect("Login.aspx", false); 
+                            }
                         }
-                        else { errorMsg = "Userid or password is not valid. Please try again."; Response.Redirect("Login.aspx", false); }
                     }
-                }
-                catch (Exception ex)
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.ToString());
+                    }
+                    finally { }
+                } else
                 {
-                    throw new Exception(ex.ToString());
+                    loginErrorMsg.Text = "Your account has been lock out!";
+                    loginErrorMsg.Visible = true;
                 }
-                finally { }
             }
 
         }
@@ -136,6 +171,40 @@ namespace SecureWebAppWebForm
             }
             finally { connection.Close(); }
             return s;
+        }
+
+        protected int getFailedAttempts(string userid)
+        {
+            int failedAttempts = 0;
+            string MYDBConnectionString =
+        System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+            SqlConnection connection = new SqlConnection(MYDBConnectionString);
+            string sql = "select failedLoginAttempt FROM ACCOUNT WHERE Email=@USERID";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@USERID", userid);
+            try
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["failedLoginAttempt"] != null)
+                        {
+                            if (reader["failedLoginAttempt"] != DBNull.Value)
+                            {
+                                failedAttempts = Convert.ToInt32(reader["failedLoginAttempt"].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally { connection.Close(); }
+            return failedAttempts;
         }
 
         public bool ValidateCaptcha()
