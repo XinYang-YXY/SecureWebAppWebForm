@@ -17,17 +17,17 @@
                         <div class="row register-form">
                             <div class="col-md-12 center-block">
                                 <div class="form-group d-flex justify-content-center">
-                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value="" ID="TBResetEmail" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value="" ID="TBResetEmail" runat="server" required="true"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group d-flex justify-content-center">
-                                    <asp:TextBox type="password" class="form-control" placeholder="Old Password *" value="" runat="server" ID="TBResetOldPassword"></asp:TextBox>
+                                    <asp:TextBox type="password" class="form-control" placeholder="Old Password *" value="" runat="server" ID="TBResetOldPassword" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group d-flex justify-content-center">
-                                    <asp:TextBox type="password" class="form-control" placeholder="New Password *" value="" runat="server" ID="TBResetNewPassword"></asp:TextBox>
+                                    <asp:TextBox type="password" class="form-control" placeholder="New Password *" value="" runat="server" ID="TBResetNewPassword" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group d-flex justify-content-center">
-                                    <asp:TextBox type="password" class="form-control" placeholder="Confirm New Password *" value="" runat="server" ID="TBResetNewPasswordConfirm"></asp:TextBox>
+                                    <asp:TextBox type="password" class="form-control" placeholder="Confirm New Password *" value="" runat="server" ID="TBResetNewPasswordConfirm" required="true"></asp:TextBox>
                                 </div>
                             <asp:Label ID="resetErrorMsg" runat="server" Text="cc" Visible="False"></asp:Label>
                             <asp:Button runat="server" class="btnRegister" ID="BTNResetSubmit" Text="Reset" OnClick="BTNResetSubmit_Click"  />

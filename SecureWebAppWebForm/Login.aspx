@@ -18,11 +18,11 @@
                         <div class="row register-form">
                             <div class="col-md-12 center-block">
                                 <div class="form-group d-flex justify-content-center">
-                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value=""  ID="TBLoginEmail" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value=""  ID="TBLoginEmail" runat="server" required="true"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group d-flex justify-content-center">
-                                    <asp:TextBox type="password" class="form-control" placeholder="Password *" value="" runat="server" ID="TBLoginPassword"></asp:TextBox>
+                                    <asp:TextBox type="password" class="form-control" placeholder="Password *" value="" runat="server" ID="TBLoginPassword" required="true"></asp:TextBox>
                                     <asp:Label ID="lblLoginPasswordAlerts" runat="server"></asp:Label></div>
                             </div>
                             <asp:Label ID="loginCaptcha" runat="server" Text=""></asp:Label>

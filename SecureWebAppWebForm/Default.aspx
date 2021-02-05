@@ -19,36 +19,36 @@
                         <div class="row register-form">
                             <div class="col-md-6 ">
                                 <div class="form-group ">
-                                    <asp:TextBox type="text" class="form-control w-100" placeholder="First Name *" value="" ID="TBRegisterFirstName" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="text" class="form-control w-100" placeholder="First Name *" value="" ID="TBRegisterFirstName" runat="server" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group">
-                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value="" ID="TBRegisterEmail" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="email" class="form-control" placeholder="Your Email *" value="" ID="TBRegisterEmail" runat="server" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group">
-                                    <asp:TextBox type="tel" class="form-control" placeholder="MM / YY *" value="" ID="TBRegisterCreditCardDate" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="tel" class="form-control" placeholder="MM / YY *" value="" ID="TBRegisterCreditCardDate" runat="server" required="true"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group">
-                                    <asp:TextBox TextMode="Password" class="form-control" placeholder="Password *" value="" ID="TBRegisterPassword" runat="server" onkeyup="javascript:validate()"></asp:TextBox>
+                                    <asp:TextBox TextMode="Password" class="form-control" placeholder="Password *" value="" ID="TBRegisterPassword" runat="server" onkeyup="javascript:validate()" required="true"></asp:TextBox>
                                     <asp:Label ID="LBLRegisterPasswordAlert" runat="server" CssClass="text-danger"></asp:Label></div>
                             </div>
                             <div class="col-md-6 ">
                                 <div class="form-group">
-                                    <asp:TextBox type="text" class="form-control" placeholder="Last Name *" value="" ID="TBRegisterLastName" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="text" class="form-control" placeholder="Last Name *" value="" ID="TBRegisterLastName" runat="server" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group">
-                                    <asp:TextBox type="tel" class="form-control" placeholder="Credit Card Number *" value="" ID="TBRegisterCreditCardNum" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="tel" class="form-control" placeholder="Credit Card Number *" value="" ID="TBRegisterCreditCardNum" runat="server" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group">
-                                    <asp:TextBox type="tel" class="form-control" placeholder="CVC *" value="" ID="TBRegisterCVC" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="tel" class="form-control" placeholder="CVC *" value="" ID="TBRegisterCVC" runat="server" required="true"></asp:TextBox>
                                 </div>
                                 <div class="form-group">
-                                    <asp:TextBox type="password" class="form-control" placeholder="Confirm Password *" value="" ID="TBRegisterConfirmPassword" runat="server"></asp:TextBox>
+                                    <asp:TextBox type="password" class="form-control" placeholder="Confirm Password *" value="" ID="TBRegisterConfirmPassword" runat="server" required="true"></asp:TextBox>
                                 </div>
 
                             </div>
                             <div class="form-group col-md-12">
-                                <asp:TextBox type="date" class="form-control col-md-12" value="" ID="TBRegisterDOB" runat="server"></asp:TextBox>
+                                <asp:TextBox type="date" class="form-control col-md-12" value="" ID="TBRegisterDOB" runat="server" required="true"></asp:TextBox>
                             </div>
                             <input type="hidden" id="g-recaptcha-response-register" name="g-recaptcha-response-register"/>
                             <asp:Label ID="registerCaptcha" runat="server" Text=""></asp:Label>

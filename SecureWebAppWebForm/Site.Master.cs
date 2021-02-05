@@ -22,6 +22,7 @@ namespace SecureWebAppWebForm
                 {
                     registerMenuBtn.Visible = false;
                     loginMenuBtn.Visible = false;
+                    passwordResetMenuBtn.Visible = false;
                     logoutMenuBtn.Visible = true;
                 }
             }
