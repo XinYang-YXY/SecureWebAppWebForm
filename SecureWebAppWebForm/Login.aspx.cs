@@ -40,11 +40,26 @@ namespace SecureWebAppWebForm
                 string dbSalt = getDBSalt(userid);
                 int failedAttempts = getFailedAttempts(userid);
                 int passwordExpiredTime = getPasswordLastModified(userid) + 900;
+                int lockoutTime = getLockoutTime(userid) + 10;
 
                 string errorMsg = "";
 
-                if (failedAttempts < 3)
+                if (failedAttempts < 3 || DateTimeOffset.Now.ToUnixTimeSeconds() > lockoutTime)
                 {
+                    if (failedAttempts >= 3 || DateTimeOffset.Now.ToUnixTimeSeconds()>lockoutTime)
+                    {
+                        string MYDBConnectionString =
+            System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+                        SqlConnection connection = new SqlConnection(MYDBConnectionString);
+                        string sqlstmt = "Update Account Set failedLoginAttempt= @failedAttempts Where email = @email";
+                        SqlCommand sqlCmd = new SqlCommand(sqlstmt, connection);
+                        sqlCmd.Parameters.AddWithValue("@failedAttempts", 0);
+                        sqlCmd.Parameters.AddWithValue("@email", userid);
+                        connection.Open();
+                        sqlCmd.ExecuteNonQuery();
+                        connection.Close();
+
+                    }
 
 
                     try
@@ -92,10 +107,11 @@ namespace SecureWebAppWebForm
                                 string MYDBConnectionString =
             System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
                                 SqlConnection connection = new SqlConnection(MYDBConnectionString);
-                                string sqlstmt = "Update Account Set failedLoginAttempt= @failedAttempts Where email = @email";
+                                string sqlstmt = "Update Account Set failedLoginAttempt= @failedAttempts, lockoutTime = @lockoutTime Where email = @email";
                                 SqlCommand sqlCmd = new SqlCommand(sqlstmt, connection);
                                 sqlCmd.Parameters.AddWithValue("@failedAttempts", failedAttempts + 1);
                                 sqlCmd.Parameters.AddWithValue("@email", userid);
+                                sqlCmd.Parameters.AddWithValue("@lockoutTime", DateTimeOffset.Now.ToUnixTimeSeconds());
                                 connection.Open();
                                 sqlCmd.ExecuteNonQuery();
                                 connection.Close();
@@ -295,6 +311,40 @@ namespace SecureWebAppWebForm
         protected void GoToResetPasswordBtn_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/PasswordReset.aspx");
+        }
+
+        protected int getLockoutTime(string userid)
+        {
+            int lockoutTime = 0;
+            string MYDBConnectionString =
+        System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+            SqlConnection connection = new SqlConnection(MYDBConnectionString);
+            string sql = "select lockoutTime  FROM ACCOUNT WHERE Email=@USERID";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@USERID", userid);
+            try
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["lockoutTime"] != null)
+                        {
+                            if (reader["lockoutTime"] != DBNull.Value)
+                            {
+                                lockoutTime = Convert.ToInt32(reader["lockoutTime"].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally { connection.Close(); }
+            return lockoutTime;
         }
     }
 }
